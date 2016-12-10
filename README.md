@@ -1,4 +1,5 @@
 # zhu-chat
+<<<<<<< HEAD
 
 > A chat program for zhuzhu
 
@@ -16,3 +17,6 @@ npm run build
 ```
 
 For detailed explanation on how things work, consult the [docs for vue-loader](http://vuejs.github.io/vue-loader).
+=======
+A chat program based Vue.js &amp; express
+>>>>>>> 9215923652d0078d16e78d5b0b32410e67f537ae
