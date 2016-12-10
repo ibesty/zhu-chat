@@ -1,0 +1,19 @@
+{
+  "name": "zhu-chat",
+  "version": "1.0.0",
+  "description": "A chat app for zhuzhu",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "chat",
+    "socket.io"
+  ],
+  "author": "bestie",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.14.0",
+    "socket.io": "^1.7.1"
+  }
+}
