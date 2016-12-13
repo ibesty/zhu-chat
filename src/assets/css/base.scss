@@ -1,3 +1,11 @@
+body, h1, h2, h3, h4, h5, h6, p, ul, ol, dl, dd, fieldset, textarea {
+    margin: 0;
+}
+
+input, textarea, button, a {
+    outline: 0;
+}
+
 html {
     height: 100%;
     overflow: hidden;
@@ -5,7 +13,7 @@ html {
 
 body {
     height: 100%;
-    background: url(../img/bg.jpg) center center / cover no-repeat;
+    background: url('../img/bg.jpg') center center / cover no-repeat;
     -webkit-font-smoothing: antialiased;
     line-height: 1.6;
 }
