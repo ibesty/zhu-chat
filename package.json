@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "vue": "^2.1.0",
-    "vue-scrollbar": "^1.0.4"
+    "vue-nice-scrollbar": "^0.1.4"
   },
   "devDependencies": {
     "autoprefixer-loader": "^3.2.0",

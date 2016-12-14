@@ -27,7 +27,7 @@
         </div>
         <!-- end tab -->
         <!-- begin chat list -->
-        <div class="chat_list scroll_wrapper">
+        <vue-nice-scrollbar classes="chat_list" theme="light" :speed=50>
             <div class="scroll_content">
                 <div v-for="chatContact in chatList" class="chat_item">
                     <div class="avatar">
@@ -40,7 +40,7 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </vue-nice-scrollbar>
         <!-- end chat list -->
     </div>
     <!-- end panel -->
@@ -158,6 +158,7 @@
     // end tab
     // begin chat_list
     .chat_list {
+    	height: 604px;
         .chat_item {
             overflow: hidden;
             padding: 12px 18px 11px;
@@ -205,17 +206,12 @@
 /* end panel */
 </style>
 <script>
-import jquery from '../assets/js/jquery.js'
-import '../assets/js/jquery.scrollbar.js'
-import '../assets/css/jquery.scrollbar.css'
-jquery.noConflict()
-jquery(document).ready(function(){
-    jquery('.scroll_wrapper').scrollbar();
-});
+import vueNiceScrollbar from '../components/vue-nice-scrollbar.vue'
+
 export default {
-    // components: {
-    //     vueScrollbar
-    // },
+    components: {
+        vueNiceScrollbar
+    },
     data: () => {
         return {
             headerImgSrc: require('../assets/img/avatar.jpg'),
