@@ -8,10 +8,10 @@
                             v-bind:scrolling="{ v: vMovement }" v-bind:dragging-from-parent="dragging" v-bind:on-change-position="handleChangePosition"
                             v-bind:show="show" v-on:vertical="moveTheScrollbar">
         </vertical-scrollbar>
-        <horizontal-scrollbar v-if="ready" v-bind:content="{ width: scrollContentWidth }" v-bind:container="{ width: scrollContainerWidth }"
+<!--         <horizontal-scrollbar v-if="ready" v-bind:content="{ width: scrollContentWidth }" v-bind:container="{ width: scrollContainerWidth }"
                             v-bind:scrolling="{ h: hMovement }" v-bind:dragging-from-parent="dragging" v-bind:on-change-position="handleChangePosition"
                             v-bind:show="show" v-on:horizontal="moveTheScrollbar">
-        </horizontal-scrollbar>
+        </horizontal-scrollbar> -->
     </div>
 </template>
 

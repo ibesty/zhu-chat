@@ -1,15 +1,17 @@
 <template>
   <div id="app">
     <panel></panel>
+    <chat-area></chat-area>
   </div>
 </template>
 
 <script>
 import Panel from './components/Panel.vue'
+import ChatArea from './components/ChatArea.vue'
 
 export default {
   name: 'app',
-  components:{Panel},
+  components:{Panel, ChatArea},
   data () {
     return {
       msg: 'Welcome to Your Vue.js App'

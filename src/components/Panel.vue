@@ -27,6 +27,7 @@
         </div>
         <!-- end tab -->
         <!-- begin chat list -->
+        <!-- use vue-nice-scrollbar to set a scrollbar for chat list -->
         <vue-nice-scrollbar classes="chat_list" theme="light" :speed=50>
             <div class="scroll_content">
                 <div v-for="chatContact in chatList" class="chat_item">

@@ -6,6 +6,14 @@ input, textarea, button, a {
     outline: 0;
 }
 
+.poi {
+    cursor: pointer;
+}
+
+a.btn {
+    text-decoration: none;
+}
+
 html {
     height: 100%;
     overflow: hidden;
