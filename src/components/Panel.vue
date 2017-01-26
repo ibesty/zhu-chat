@@ -30,7 +30,7 @@
         <!-- use vue-nice-scrollbar to set a scrollbar for chat list -->
         <vue-nice-scrollbar classes="chat_list" theme="light" :speed=50>
             <div class="scroll_content">
-                <div v-for="chatContact in chatList" class="chat_item">
+                <div v-for="chatContact in chatList" class="chat_item" @click="selectChat(chatContact)">
                     <div class="avatar">
                         <img :src="chatContact.avatarSrc" class="img">
                     </div>
@@ -219,46 +219,66 @@ export default {
             nickname: '沃金',
             searchWord: '',
             chatList: [{
+                id: '000000001',
                 nickname: '朱朱',
                 avatarSrc: require('../assets/img/contact-avatar.jpg')
-            }, {
+            },{
+                id: '000000001',
                 nickname: '朱朱',
                 avatarSrc: require('../assets/img/contact-avatar.jpg')
-            }, {
+            },{
+                id: '000000001',
                 nickname: '朱朱',
                 avatarSrc: require('../assets/img/contact-avatar.jpg')
-            }, {
+            },{
+                id: '000000001',
                 nickname: '朱朱',
                 avatarSrc: require('../assets/img/contact-avatar.jpg')
-            }, {
+            },{
+                id: '000000001',
                 nickname: '朱朱',
                 avatarSrc: require('../assets/img/contact-avatar.jpg')
-            }, {
+            },{
+                id: '000000001',
                 nickname: '朱朱',
                 avatarSrc: require('../assets/img/contact-avatar.jpg')
-            }, {
+            },{
+                id: '000000001',
                 nickname: '朱朱',
                 avatarSrc: require('../assets/img/contact-avatar.jpg')
-            }, {
+            },{
+                id: '000000001',
                 nickname: '朱朱',
                 avatarSrc: require('../assets/img/contact-avatar.jpg')
-            }, {
+            },{
+                id: '000000001',
                 nickname: '朱朱',
                 avatarSrc: require('../assets/img/contact-avatar.jpg')
-            }, {
+            },{
+                id: '000000001',
                 nickname: '朱朱',
                 avatarSrc: require('../assets/img/contact-avatar.jpg')
-            }, {
+            },{
+                id: '000000001',
                 nickname: '朱朱',
                 avatarSrc: require('../assets/img/contact-avatar.jpg')
-            }, {
+            },{
+                id: '000000001',
                 nickname: '朱朱',
                 avatarSrc: require('../assets/img/contact-avatar.jpg')
-            }, {
+            },{
+                id: '000000001',
                 nickname: '朱朱',
                 avatarSrc: require('../assets/img/contact-avatar.jpg')
             }]
         }
-    }
+    },
+    methods: {
+        selectChat: function(chatContact){
+            //alert(chatContact.id)
+            console.log(chatContact.id)
+            this.$emit('contactChange',chatContact.id)
+        }
+    },
 }
 </script>

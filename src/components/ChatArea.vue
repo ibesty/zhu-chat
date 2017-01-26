@@ -3,14 +3,14 @@
         <div class="chat_header">
             <div class="title_wrap">
                 <div class="title">
-                    <a href="javascript:" class="title_name">{{nickname}}</a>
+                    <a v-if="currentContact.hasCurrentContact" href="javascript:" class="title_name">{{nickname}}</a>
                 </div>
             </div>
         </div>
         <div class="chat_body">
             <!-- Temporarily left blank -->
         </div>
-        <div class="chat_footer">
+        <div v-if="currentContact.hasCurrentContact" class="chat_footer">
             <div class="toolbar">
                 <!-- Temporarily left blank -->
             </div>
@@ -137,7 +137,11 @@
 export default {
     data: () => {
         return {
-            nickname: '朱朱'
+            currentContact: {
+            	hasCurrentContact: false,
+            	id: null,
+            	nickname: null
+            }
         }
     }
 }
