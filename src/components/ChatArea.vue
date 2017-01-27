@@ -135,7 +135,7 @@
 </style>
 <script>
 export default {
-    data: () => {
+    data: function(){
         return {
             currentContact: {
             	hasCurrentContact: false,
@@ -143,6 +143,11 @@ export default {
             	nickname: null
             }
         }
+    },
+    methods: {
+      sendMessage: function(){
+
+      }
     }
 }
 </script>
