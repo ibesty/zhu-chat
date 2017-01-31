@@ -9,8 +9,10 @@
     "build": "cross-env NODE_ENV=production webpack --progress --hide-modules"
   },
   "dependencies": {
+    "socket.io": "^1.7.2",
     "vue": "^2.1.0",
-    "vue-nice-scrollbar": "^0.1.4"
+    "vue-nice-scrollbar": "^0.1.4",
+    "vue-socket.io": "^2.1.0"
   },
   "devDependencies": {
     "autoprefixer-loader": "^3.2.0",
