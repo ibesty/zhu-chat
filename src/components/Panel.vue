@@ -1,48 +1,48 @@
 <template>
 <!-- begin panel -->
 <div class="panel">
-    <!-- begin header -->
-    <div class="header">
-        <div class="avatar">
-            <img class="img" :src="headerImgSrc" @click="showProfile">
-        </div>
-        <div class="info">
-            <h3 class="nickname">
+  <!-- begin header -->
+  <div class="header">
+    <div class="avatar">
+      <img class="img" :src="headerImgSrc" @click="showProfile">
+    </div>
+    <div class="info">
+      <h3 class="nickname">
 					<span class="display_name">{{nickname}}</span>
 					<a class="opt">
 						<i class="web_wechat_add"></i>
 					</a>
 				</h3>
+    </div>
+  </div>
+  <!-- end header -->
+  <!-- begin search -->
+  <div class="search_bar">
+    <i class="web_wechat_search"></i>
+    <input v-model="searchWord" placeholder="搜索" type="text" class="frm_search">
+  </div>
+  <!-- end search -->
+  <!-- begin tab -->
+  <div class="tab">
+  </div>
+  <!-- end tab -->
+  <!-- begin chat list -->
+  <!-- use vue-nice-scrollbar to set a scrollbar for chat list -->
+  <vue-nice-scrollbar classes="chat_list" theme="light" :speed=50>
+    <div class="scroll_content">
+      <div v-for="chatContact in chatList" :class="{current_chat: chatContact.currentChat}" class="chat_item" @click="selectChat(chatContact)">
+        <div class="avatar">
+          <img :src="chatContact.avatarSrc" class="img">
         </div>
-    </div>
-    <!-- end header -->
-    <!-- begin search -->
-    <div class="search_bar">
-        <i class="web_wechat_search"></i>
-        <input v-model="searchWord" placeholder="搜索" type="text" class="frm_search">
-    </div>
-    <!-- end search -->
-    <!-- begin tab -->
-    <div class="tab">
-    </div>
-    <!-- end tab -->
-    <!-- begin chat list -->
-    <!-- use vue-nice-scrollbar to set a scrollbar for chat list -->
-    <vue-nice-scrollbar classes="chat_list" theme="light" :speed=50>
-        <div class="scroll_content">
-            <div v-for="chatContact in chatList" :class="{current_chat: chatContact.currentChat}" class="chat_item" @click="selectChat(chatContact)">
-                <div class="avatar">
-                    <img :src="chatContact.avatarSrc" class="img">
-                </div>
-                <div class="info">
-                    <h3 class="nickname">
+        <div class="info">
+          <h3 class="nickname">
                     		<span class="nickname_text">{{chatContact.nickname}}</span>
                     	</h3>
-                </div>
-            </div>
         </div>
-    </vue-nice-scrollbar>
-    <!-- end chat list -->
+      </div>
+    </div>
+  </vue-nice-scrollbar>
+  <!-- end chat list -->
 </div>
 <!-- end panel -->
 </template>
@@ -212,85 +212,85 @@
 import vueNiceScrollbar from '../components/vue-nice-scrollbar.vue'
 
 export default {
-    components: {
-        vueNiceScrollbar
+  components: {
+    vueNiceScrollbar
+  },
+  data: function () {
+    return {
+      headerImgSrc: require( '../assets/img/avatar.jpg' ),
+      nickname: '沃金',
+      searchWord: '',
+      chatList: [ {
+        id: '000000001',
+        nickname: '朱朱',
+        currentChat: false,
+        avatarSrc: require( '../assets/img/contact-avatar.jpg' )
+      }, {
+        id: '000000002',
+        nickname: '朱朱',
+        currentChat: false,
+        avatarSrc: require( '../assets/img/contact-avatar.jpg' )
+      }, {
+        id: '000000003',
+        nickname: '朱朱',
+        currentChat: false,
+        avatarSrc: require( '../assets/img/contact-avatar.jpg' )
+      }, {
+        id: '000000004',
+        nickname: '朱朱',
+        currentChat: false,
+        avatarSrc: require( '../assets/img/contact-avatar.jpg' )
+      }, {
+        id: '000000005',
+        nickname: '朱朱',
+        currentChat: false,
+        avatarSrc: require( '../assets/img/contact-avatar.jpg' )
+      }, {
+        id: '000000006',
+        nickname: '朱朱',
+        currentChat: false,
+        avatarSrc: require( '../assets/img/contact-avatar.jpg' )
+      }, {
+        id: '000000007',
+        nickname: '朱朱',
+        currentChat: false,
+        avatarSrc: require( '../assets/img/contact-avatar.jpg' )
+      }, {
+        id: '000000008',
+        nickname: '朱朱',
+        currentChat: false,
+        avatarSrc: require( '../assets/img/contact-avatar.jpg' )
+      }, {
+        id: '000000009',
+        nickname: '朱朱',
+        currentChat: false,
+        avatarSrc: require( '../assets/img/contact-avatar.jpg' )
+      }, {
+        id: '000000010',
+        nickname: '朱朱',
+        currentChat: false,
+        avatarSrc: require( '../assets/img/contact-avatar.jpg' )
+      }, {
+        id: '000000011',
+        nickname: '朱朱',
+        currentChat: false,
+        avatarSrc: require( '../assets/img/contact-avatar.jpg' )
+      } ]
+    }
+  },
+  methods: {
+    showProfile: function () {
+      alert( this.nickname )
     },
-    data: function() {
-        return {
-            headerImgSrc: require('../assets/img/avatar.jpg'),
-            nickname: '沃金',
-            searchWord: '',
-            chatList: [{
-                id: '000000001',
-                nickname: '朱朱',
-                currentChat: false,
-                avatarSrc: require('../assets/img/contact-avatar.jpg')
-            }, {
-                id: '000000002',
-                nickname: '朱朱',
-                currentChat: false,
-                avatarSrc: require('../assets/img/contact-avatar.jpg')
-            }, {
-                id: '000000003',
-                nickname: '朱朱',
-                currentChat: false,
-                avatarSrc: require('../assets/img/contact-avatar.jpg')
-            }, {
-                id: '000000004',
-                nickname: '朱朱',
-                currentChat: false,
-                avatarSrc: require('../assets/img/contact-avatar.jpg')
-            }, {
-                id: '000000005',
-                nickname: '朱朱',
-                currentChat: false,
-                avatarSrc: require('../assets/img/contact-avatar.jpg')
-            }, {
-                id: '000000006',
-                nickname: '朱朱',
-                currentChat: false,
-                avatarSrc: require('../assets/img/contact-avatar.jpg')
-            }, {
-                id: '000000007',
-                nickname: '朱朱',
-                currentChat: false,
-                avatarSrc: require('../assets/img/contact-avatar.jpg')
-            }, {
-                id: '000000008',
-                nickname: '朱朱',
-                currentChat: false,
-                avatarSrc: require('../assets/img/contact-avatar.jpg')
-            }, {
-                id: '000000009',
-                nickname: '朱朱',
-                currentChat: false,
-                avatarSrc: require('../assets/img/contact-avatar.jpg')
-            }, {
-                id: '000000010',
-                nickname: '朱朱',
-                currentChat: false,
-                avatarSrc: require('../assets/img/contact-avatar.jpg')
-            }, {
-                id: '000000011',
-                nickname: '朱朱',
-                currentChat: false,
-                avatarSrc: require('../assets/img/contact-avatar.jpg')
-            }]
-        }
-    },
-    methods: {
-        showProfile: function() {
-            alert(this.nickname)
-        },
-        selectChat: function(chatContact) {
-            //alert(chatContact.id)
-            console.log(chatContact.id)
-            bus.$emit('contactChange', chatContact.id)
-            this.chatList.forEach(function (chatContact) {
-              chatContact.currentChat = false
-            })
-            chatContact.currentChat = true
-        }
-    },
+    selectChat: function ( chatContact ) {
+      //alert(chatContact.id)
+      console.log( chatContact.id )
+      bus.$emit( 'contactChange', chatContact.id )
+      this.chatList.forEach( function ( chatContact ) {
+        chatContact.currentChat = false
+      } )
+      chatContact.currentChat = true
+    }
+  },
 }
 </script>
