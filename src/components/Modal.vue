@@ -15,7 +15,6 @@
                 </div>
                 <div class="modal-footer">
                     <slot name="footer">
-                        default footer
                         <button class="modal-default-button" @click="$emit('close')">OK</button>
                     </slot>
                 </div>
@@ -61,6 +60,10 @@
 
 .modal-body {
     margin: 20px 0;
+}
+
+.modal-footer {
+  height: 20px;
 }
 
 .modal-default-button {

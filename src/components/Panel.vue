@@ -215,10 +215,10 @@ export default {
   components: {
     vueNiceScrollbar
   },
+  props: ['nickname'],
   data: function () {
     return {
       headerImgSrc: require( '../assets/img/avatar.jpg' ),
-      nickname: '沃金',
       searchWord: '',
       chatList: [ {
         id: '000000001',

@@ -1,7 +1,10 @@
 <template>
 <div id="app">
-  <modal v-if="modal_show" @close="modal_show=false"></modal>
-  <panel></panel>
+  <modal v-if="modal_show" @close="close">
+    <h3 slot="header">请输入一个名字</h3>
+    <input slot="body" type="text" name="username" value="" v-model="nickname">
+  </modal>
+  <panel :nickname="nickname"></panel>
   <chat-area></chat-area>
 </div>
 </template>
@@ -20,6 +23,7 @@ export default {
   },
   data() {
     return {
+      nickname: '',
       currentContact: 'Welcome to Your Vue.js App',
       modal_show: true
     }
@@ -33,7 +37,9 @@ export default {
     }
   },
   methods: {
-
+    close: function(){
+      this.nickname.trim()=='' ? alert('请输入一个名字') : this.modal_show=false;
+    }
   }
 }
 </script>
