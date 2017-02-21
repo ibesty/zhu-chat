@@ -6,6 +6,7 @@ const app = Express()
 const http = Http.Server(app)
 const io = Socket(http)
 
+var userList = {}
 app.get('/', (req, res) => {
     res.sendFile(__dirname + '/index.html')
 });
@@ -18,14 +19,27 @@ io.on('connection', socket => {
         console.log('user disconnected')
     })
 
-    socket.on('login',userInfo=>{
-        console.log(userInfo.nickname +'已经登陆, ID是: '+userInfo.userID)
-        socket.broadcast.emit('login',userInfo)
+    socket.on('login', userInfo => {
+        userList[parseInt(userInfo.userID)] = userInfo
+        userList[parseInt(userInfo.userID)].socketID = socket.id
+        console.log(userList[parseInt(userInfo.userID)])
+        console.log(userInfo.nickname + '已经登陆, ID是: ' + userList[parseInt(userInfo.userID)].userID)
+        console.log('当前在线的用户： ')
+        for (var item in userList) {
+            console.log('昵称: ' + userList[item].nickname + ' | ID: ' + userList[item].userID)
+        }
+        io.sockets.emit('login', {
+            'userInfo': userInfo,
+            'userList': userList
+        })
     })
 
-    socket.on('message', data => {
-        console.log(data.nickname + '给message ' + msg)
-        io.emit('chat message', msg)
+    socket.on('message', msgData => {
+        console.log(msgData.sourceID + '对 ' + msgData.targetID + ' 说: ' + msgData.msgText)
+        console.log(userList[parseInt(msgData.targetID)].socketID)
+        msgData.type = 2
+        io.sockets.sockets[userList[parseInt(msgData.targetID)].socketID].emit('message', msgData)
+        //io.sockets[userList[parseInt(msgData.targetID)].socketID].emit('message', msgData)
     })
 })
 

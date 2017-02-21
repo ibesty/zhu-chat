@@ -3,19 +3,34 @@
         <div class="chat_header">
             <div class="title_wrap">
                 <div class="title">
-                    <a v-if="currentContact !== ''" href="javascript:" class="title_name">{{nickname}}</a>
+                    <a v-if="currentContact !== ''" href="javascript:"
+                       class="title_name">{{currentContact.nickname}}</a>
                 </div>
             </div>
         </div>
         <div class="chat_body">
-            <!-- Temporarily left blank -->
+            <vue-nice-scrollbar classes="chat_content" theme="light" :speed=50>
+                <div class="scroll_content">
+                    <div v-for="message in messageList" class="message_item">
+                        {{message}}
+                        <!--<div :class="message.type = 1 ? user_avatar :contact_avatar">-->
+                            <!--<img :src="message.type = 1 ? headerImgSrc :currentContact.userAvatar" class="img">-->
+                        <!--</div>-->
+                        <!--<div class="info">-->
+                            <!--<h3 class="nickname">-->
+                                <!--<span class="nickname_text">{{chatContact.nickname}}</span>-->
+                            <!--</h3>-->
+                        <!--</div>-->
+                    </div>
+                </div>
+            </vue-nice-scrollbar>
         </div>
-        <div v-if="currentContact.hasCurrentContact" class="chat_footer">
+        <div v-if="currentContact !== ''" class="chat_footer">
             <div class="toolbar">
                 <!-- Temporarily left blank -->
             </div>
             <div class="input_content">
-                <pre id="edit_area" v-model="inputContent" class="edit_area" contenteditable="true"></pre>
+                <pre id="edit_area" class="edit_area" contenteditable="true" @keyup="changeData($event)"></pre>
             </div>
             <div class="action">
                 <a href="javascript:" @click="sendConfirm" class="btn btn_send">发送</a>
@@ -61,9 +76,8 @@
                         text-decoration:none;
                         color: #000;
                         font-weight: 400;
-            }
         }
-    } }
+    } } }
         // end chat header
         // begin chat body
         .chat_body {
@@ -115,8 +129,7 @@
                 padding-right: 30px;
                 &:hover {
                     background-color: rgba(200, 200, 200, 0.1);
-        }
-    }
+    } }
         .btn {
             display:inline-block;
             border: 1px solid #c1c1c1;
@@ -130,17 +143,28 @@
     // end chat area
 </style>
 <script>
+    import vueNiceScrollbar from './vue-nice-scrollbar.vue'
+
     export default {
-        props: ['currentContact'],
+        components: {
+            vueNiceScrollbar
+        },
+        props: ['currentContact', 'messageList'],
         data: function () {
             return {
                 inputContent: ''
             }
         },
         methods: {
+            changeData: function (event) {
+                this.inputContent = event.srcElement.innerHTML;
+            },
             sendConfirm: function () {
                 this.inputContent.trim() === '' ? alert('不能发送空白消息') : this.$emit('sendConfirm', this.inputContent)
+                document.getElementById('edit_area').innerHTML = ''
+                console.log(this.messageList)
             }
+
         }
     }
 </script>

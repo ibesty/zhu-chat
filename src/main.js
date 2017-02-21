@@ -7,7 +7,7 @@ import './assets/css/base.scss'
 
 Vue.use(VueSocketio, 'http://localhost:3000')
 
-new Vue({
+window.vm = new Vue({
   el: '#app',
   render: h => h(App)
 })

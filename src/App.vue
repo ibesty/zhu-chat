@@ -1,13 +1,13 @@
 <template>
     <div id="app">
-        <modal v-if="modal_show" @close="close">
+        <modal v-if="modal_show" @close="close()">
             <h3 slot="header">请输入一个名字</h3>
             <input slot="body" type="text" name="username" value="" v-model="userInfo.nickname">
             <button slot="footer" @click="close(),login()">确定</button>
         </modal>
-        <panel :userList="userList" :userInfo="userInfo" @currentContact="currentContactChange"></panel>
-        <chat-area :currentContact="currentContact" @sendConfirm="sendMsg"></chat-area>
-        <button @click="aaa" style="z-index:999;position: absolute;top: 400px;left: 400px;">点击push</button>
+        <panel :userList="userList" :userInfo="userInfo" @currentContactChange="currentContactChange"></panel>
+        <chat-area :currentContact="currentContact" :messageList="currentMessageList"
+                   @sendConfirm="sendMessage"></chat-area>
     </div>
 </template>
 
@@ -19,6 +19,13 @@
     const avatar1 = require('./assets/img/avatar.jpg')
     const avatar2 = require('./assets/img/contact-avatar.jpg')
 
+    function msgData (type, sourceID, targetID, msgText) {
+        this.type = type
+        this.sourceID = sourceID
+        this.targetID = targetID
+        this.msgText = msgText
+    }
+
     export default {
         name: 'app',
         components: {
@@ -26,26 +33,22 @@
             Panel,
             ChatArea
         },
-        data() {
+        data: function () {
             return {
                 userInfo: {
                     nickname: '',
                     userID: '',
-                    userAvatar: avatar1
+                    userAvatar: avatar1,
+                    currentChat: false
                 },
-                msgData: {
-                    type: 1,
-                    sourceID: '',
-                    targetID: '',
-                    msgText: ''
-                },
-                userList: [],
-                messageList: [],
+                userList: {},
+                messageList: {},
+                currentMessageList: [],
                 currentContact: '',
                 modal_show: true
             }
         },
-        created() { //创建实例时检查是否已经登陆过，如果是的话直接从localStorage中获取nickname和userID
+        created: function () { //创建实例时检查是否已经登陆过，如果是的话直接从localStorage中获取nickname和userID
             this.userInfo.nickname = localStorage.getItem('nickname') || ''
             this.userInfo.userID = localStorage.getItem('userID') || this.rand()
             if (this.userInfo.nickname !== '') {
@@ -57,15 +60,25 @@
             connect: function () {
                 console.log('socket connected')
             },
-            login: function (userInfo) {
-                userInfo.currentChat = false
+            login: function (data) {
+                let userInfo = data.userInfo
+                this.userList = data.userList
                 console.log(userInfo)
-                console.log(this.userList)
+                console.log(Object.keys(data.userList))
                 //this.userList.push(userInfo)
-                console.log(userInfo.nickname +'已登陆'+this.userList.toString())
+                console.log(userInfo.nickname + '已登陆')
+                for (var item in this.userList) {
+                    console.log('昵称: ' + this.userList[item].nickname + ' | ID: ' + this.userList[item].userID)
+                }
             },
             message: function (msgData) {
-                this.messageList[msgData.sourceID].push(msgData)
+                if (typeof this.messageList[parseInt(msgData.sourceID)] == 'undefined') {
+                    this.messageList[parseInt(msgData.sourceID)] = new Array()
+                }
+                //this.messageList[parseInt(msgData.sourceID)] = new Array
+                this.messageList[parseInt(msgData.sourceID)].push(msgData)
+                console.log('收到了 ' + msgData.sourceID + ' 发来的消息: ' + msgData.msgText)
+                console.log(this.messageList[parseInt(msgData.sourceID)])
             }
         },
         methods: {
@@ -81,18 +94,22 @@
                 this.$socket.emit('login', this.userInfo)
             },
             sendMessage: function (msgText) {
-                this.msgData.sourceID = this.userInfo.userID
-                this.msgData.targetID = this.currentContact
-                this.msgData.msgText = msgText
-                this.messageList[this.currentContact].push(this.msgData)
-                this.$socket.emit('message', this.msgData)
+//                this.msgData.sourceID = this.userInfo.userID
+//                this.msgData.targetID = this.currentContact.userID
+//                this.msgData.msgText = msgText
+                let TempMsgData = new msgData(1,this.userInfo.userID,this.currentContact.userID,msgText)
+                if (typeof this.messageList[parseInt(this.currentContact.userID)] == 'undefined') {
+                    this.messageList[parseInt(this.currentContact.userID)] = new Array()
+                }
+                this.messageList[parseInt(this.currentContact.userID)].push(TempMsgData)
+                this.currentMessageList = this.messageList[parseInt(this.currentContact.userID)]
+                this.$socket.emit('message', TempMsgData)
+                console.log('消息已发送给 ' + TempMsgData.targetID + ' : ' + TempMsgData.msgText)
+                console.log(this.messageList[parseInt(this.currentContact.userID)])
             },
             currentContactChange: function (chatContact) {
-                this.currentContact = chatContact.userID
-            },
-            aaa: function () {
-                this.userList.push({aaa: 'aaa'})
-                console.log(this.userList)
+                this.currentContact = chatContact
+                console.log(this.currentContact.userID)
             }
         }
     }

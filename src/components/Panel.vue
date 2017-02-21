@@ -33,7 +33,7 @@
                 <div v-for="chatContact in userList" :class="{current_chat: chatContact.currentChat}" class="chat_item"
                      @click="selectChat(chatContact)">
                     <div class="avatar">
-                        <img :src="chatContact.avatarSrc" class="img">
+                        <img :src="chatContact.userAvatar" class="img">
                     </div>
                     <div class="info">
                         <h3 class="nickname">
@@ -210,7 +210,7 @@
     /* end panel */
 </style>
 <script>
-    import vueNiceScrollbar from '../components/vue-nice-scrollbar.vue'
+    import vueNiceScrollbar from './vue-nice-scrollbar.vue'
 
     export default {
         components: {
@@ -228,16 +228,16 @@
                 alert(this.userInfo.nickname)
             },
             selectChat: function (chatContact) {
-                //alert(chatContact.id)
+                //alert(chatContact.nickname)
                 console.log('当前聊天对象: '+ chatContact.nickname +' ID: '+chatContact.userID)
-                for (let i=0,length=this.userList.length;i<length;i++) {
-                    chatContact[i].currentChat = false
+                for(var item in this.userList) {
+                    this.userList[item].currentChat = false
                 }
 //                this.chatList.forEach(function (chatContact) {
 //                    chatContact.currentChat = false
 //                })
                 chatContact.currentChat = true
-                this.$emit('currentContact',chatContact)
+                this.$emit('currentContactChange',chatContact)
             }
         },
     }
