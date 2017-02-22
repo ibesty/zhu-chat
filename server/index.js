@@ -37,7 +37,7 @@ io.on('connection', socket => {
     socket.on('message', msgData => {
         console.log(msgData.sourceID + '对 ' + msgData.targetID + ' 说: ' + msgData.msgText)
         console.log(userList[parseInt(msgData.targetID)].socketID)
-        msgData.type = 2
+        msgData.msgType = 2
         io.sockets.sockets[userList[parseInt(msgData.targetID)].socketID].emit('message', msgData)
         //io.sockets[userList[parseInt(msgData.targetID)].socketID].emit('message', msgData)
     })

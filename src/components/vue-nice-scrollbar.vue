@@ -1,24 +1,30 @@
 <template>
-    <div class="nice-bar" v-bind:class="[ theme==='dark' ? 'theme-dark' : 'theme-light', classes ? ' ' + classes : '']" ref="scrollContainer">
-        <div ref="scrollContent" v-bind:style="{ 'margin-top': top * -1 + 'px', 'margin-left': left * -1 + 'px' }" @wheel="scroll"
-            @touchstart="startDrag" @touchmove="onDrag" @touchend="stopDrag">
+    <div class="nice-bar" v-bind:class="[ theme==='dark' ? 'theme-dark' : 'theme-light', classes ? ' ' + classes : '']"
+         ref="scrollContainer">
+        <div ref="scrollContent" v-bind:style="{ 'margin-top': top * -1 + 'px', 'margin-left': left * -1 + 'px' }"
+             @wheel="scroll"
+             @touchstart="startDrag" @touchmove="onDrag" @touchend="stopDrag" style="position: relative;">
             <slot></slot>
+            <resize-sensor @resized="onResize" :debounce="50"></resize-sensor>
+            <!--resize when data change-->
         </div>
-        <vertical-scrollbar v-if="ready" v-bind:content="{ height: scrollContentHeight }" v-bind:container="{ height: scrollContainerHeight }"
-                            v-bind:scrolling="{ v: vMovement }" v-bind:dragging-from-parent="dragging" v-bind:on-change-position="handleChangePosition"
+        <vertical-scrollbar ref="vscb" v-if="ready" v-bind:content="{ height: scrollContentHeight }"
+                            v-bind:container="{ height: scrollContainerHeight }"
+                            v-bind:scrolling="{ v: vMovement }" v-bind:dragging-from-parent="dragging"
+                            v-bind:on-change-position="handleChangePosition"
                             v-bind:show="show" v-on:vertical="moveTheScrollbar">
         </vertical-scrollbar>
-<!--         <horizontal-scrollbar v-if="ready" v-bind:content="{ width: scrollContentWidth }" v-bind:container="{ width: scrollContainerWidth }"
-                            v-bind:scrolling="{ h: hMovement }" v-bind:dragging-from-parent="dragging" v-bind:on-change-position="handleChangePosition"
-                            v-bind:show="show" v-on:horizontal="moveTheScrollbar">
-        </horizontal-scrollbar> -->
+        <!--         <horizontal-scrollbar v-if="ready" v-bind:content="{ width: scrollContentWidth }" v-bind:container="{ width: scrollContainerWidth }"
+                                    v-bind:scrolling="{ h: hMovement }" v-bind:dragging-from-parent="dragging" v-bind:on-change-position="handleChangePosition"
+                                    v-bind:show="show" v-on:horizontal="moveTheScrollbar">
+                </horizontal-scrollbar> -->
     </div>
 </template>
 
 <script>
     import verticalScrollbar from './vertical-scrollbar.vue'
     import horizontalScrollbar from './horizontal-scrollbar.vue'
-
+    import resizeSensor from 'vue-resizesensor'
     require('../assets/css/vue-nice-scrollbar.scss')
 
     export default {
@@ -36,6 +42,10 @@
                 type: Number,
                 default: 53
             },
+            needToBottom: {
+                type: Boolean,
+                default: false
+            }
         },
 
         data() {
@@ -53,12 +63,12 @@
                 left: 0,
                 vMovement: 0,
                 hMovement: 0,
-                start: { y: 0, x: 0 },
+                start: {y: 0, x: 0},
             }
         },
 
         components: {
-            verticalScrollbar, horizontalScrollbar
+            verticalScrollbar, horizontalScrollbar, resizeSensor
         },
 
         methods: {
@@ -96,7 +106,8 @@
                 this.scrollY = e.deltaY > 0 ? num : -(num)
                 this.scrollX = e.deltaX > 0 ? num : -(num)
 
-                if(shifted && e.deltaX == 0) this.scrollX = e.deltaY > 0 ? num : -(num)
+
+                if (shifted && e.deltaX == 0) this.scrollX = e.deltaY > 0 ? num : -(num)
 
                 let nextY = this.top + this.scrollY
                 let nextX = this.left + this.scrollX
@@ -118,12 +129,14 @@
             normalizeVertical(nextY) {
                 let lowerEnd = this.scrollContentHeight - this.scrollContainerHeight
 
+                console.log(lowerEnd)
                 if (nextY > lowerEnd)
                     nextY = lowerEnd
                 else if (nextY < 0)
                     nextY = 0
 
                 this.top = nextY
+                console.log(this.top)
             },
 
             normalizeHorizontal(nextX) {
@@ -152,7 +165,7 @@
                 this.show = true
                 this.start.y = e.pageY
                 this.start.x = e.pageX
-             },
+            },
 
             onDrag(e) {
                 if (this.dragging) {
@@ -185,12 +198,28 @@
                 if (orientation == 'vertical') this.normalizeVertical(next)
                 if (orientation == 'horizontal') this.normalizeHorizontal(next)
             },
+            onResize() { //稍作修改，监听了resize事件，同时重新计算高度
+                console.log('resize')
+                this.calculateSize()
+                this.$refs.vscb.calculateSize()
+                if (this.needToBottom) {
+                    this.scrollBottom() //resize之后滚动到最底部
+                }
+
+            },
+            scrollBottom() { //添加了方法，滚动到最底部
+                if (this.scrollContentHeight > this.scrollContainerHeight) {
+                    let lowerEnd = this.scrollContentHeight - this.scrollContainerHeight
+                    this.top = lowerEnd
+                    this.moveTheScrollbar()
+                }
+            }
         },
 
         mounted() {
             this.calculateSize()
 
-            window.addEventListener('resize', this.calculateSize)
+            this.$refs.scrollContainer.addEventListener('resize', this.calculateSize())
 
             if (this.ready) {
                 this.$refs.scrollContainer.addEventListener('mouseenter', this.showSlider)

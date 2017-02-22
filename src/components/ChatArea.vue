@@ -9,18 +9,20 @@
             </div>
         </div>
         <div class="chat_body">
-            <vue-nice-scrollbar classes="chat_content" theme="light" :speed=50>
-                <div class="scroll_content">
-                    <div v-for="message in messageList" class="message_item">
-                        {{message}}
-                        <!--<div :class="message.type = 1 ? user_avatar :contact_avatar">-->
-                            <!--<img :src="message.type = 1 ? headerImgSrc :currentContact.userAvatar" class="img">-->
-                        <!--</div>-->
-                        <!--<div class="info">-->
-                            <!--<h3 class="nickname">-->
-                                <!--<span class="nickname_text">{{chatContact.nickname}}</span>-->
-                            <!--</h3>-->
-                        <!--</div>-->
+            <vue-nice-scrollbar classes="chat_content" theme="light" :speed=50 :needToBottom="true">
+                <div id="scroll_content" class="scroll_content">
+                    <div v-for="message in msgList" class="message_item">
+                        <div :class="{'system_msg' : message.msgType == 0,'self_msg': message.msgType == 1,'other_msg': message.msgType == 2}">
+                            <img v-if="message.msgType !== 0"
+                                 :src="message.msgType === 1 ? headerImgSrc :currentContact.userAvatar" class="img">
+
+                            <div class="msgText">
+                                <span class="text_content">
+                                    {{message.msgText}}
+                                </span>
+                            </div>
+                        </div>
+
                     </div>
                 </div>
             </vue-nice-scrollbar>
@@ -40,6 +42,10 @@
 </template>
 <style lang="sass" rel="stylesheet/sass">
     // begin chat area
+    body {
+        box-sizing: border-box;
+    }
+
     .chat {
         position:relative;
         background-color: #eee;
@@ -76,8 +82,7 @@
                         text-decoration:none;
                         color: #000;
                         font-weight: 400;
-        }
-    } } }
+    } } } }
         // end chat header
         // begin chat body
         .chat_body {
@@ -86,8 +91,25 @@
             left: 0;
             top: 51px;
             bottom: 180px;
-            padding: 0 19px;
+            padding: 10px 19px;
+            .chat_content {
+                height:100%;
     }
+        .message_item {
+            min-height:3em;
+                width:90%;
+                    margin: 0 auto;
+                    .img {
+                        height:2.2em;
+    }
+        .self_msg {
+            .img {
+                float:right;
+    } }
+        .other_msg {
+            .img {
+                float:left;
+    } } } }
         // end chat body
         .chat_footer {
             position:absolute;
@@ -152,7 +174,17 @@
         props: ['currentContact', 'messageList'],
         data: function () {
             return {
-                inputContent: ''
+                inputContent: '',
+                msgList: [],
+                headerImgSrc: require('../assets/img/avatar.jpg')
+            }
+        },
+        watch: {
+            messageList: function () {
+                this.msgList = this.messageList
+                console.log(this.msgList)
+                document.querySelector('#scroll_content').parentNode.scrollTop = document.querySelector('#scroll_content').parentNode.scrollHeight
+                console.log(document.querySelector('#scroll_content').parentNode.scrollHeight)
             }
         },
         methods: {
@@ -162,7 +194,8 @@
             sendConfirm: function () {
                 this.inputContent.trim() === '' ? alert('不能发送空白消息') : this.$emit('sendConfirm', this.inputContent)
                 document.getElementById('edit_area').innerHTML = ''
-                console.log(this.messageList)
+                this.inputContent = ''
+                console.log(this.msgList)
             }
 
         }

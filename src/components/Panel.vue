@@ -47,7 +47,7 @@
     </div>
     <!-- end panel -->
 </template>
-<style lang="sass" rel="stylesheet/sass">
+<style lang="sass">
     /* begin panel */
     .panel {
         position:relative;
@@ -160,7 +160,7 @@
         // end tab
         // begin chat_list
         .chat_list {
-            height: 604px;
+            max-height: 604px;
             .current_chat {
                 background-color: rgb(44, 62, 80);
         }
@@ -210,7 +210,7 @@
     /* end panel */
 </style>
 <script>
-    import vueNiceScrollbar from './vue-nice-scrollbar.vue'
+    import vueNiceScrollbar from '../components/vue-nice-scrollbar.vue'
 
     export default {
         components: {
@@ -238,7 +238,7 @@
 //                })
                 chatContact.currentChat = true
                 this.$emit('currentContactChange',chatContact)
-            }
+            },
         },
     }
 </script>
