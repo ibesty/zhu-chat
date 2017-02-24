@@ -30,7 +30,7 @@
         <!-- use vue-nice-scrollbar to set a scrollbar for chat list -->
         <vue-nice-scrollbar classes="chat_list" theme="light" :speed=50>
             <div class="scroll_content">
-                <div v-for="chatContact in userList" :class="{current_chat: chatContact.currentChat}" class="chat_item"
+                <div v-for="chatContact in this.noSelfContact" :class="{current_chat: chatContact.currentChat}" class="chat_item"
                      @click="selectChat(chatContact)">
                     <div class="avatar">
                         <img :src="chatContact.userAvatar" class="img">
@@ -223,9 +223,22 @@
                 searchWord: ''
             }
         },
+        computed: {
+            noSelfContact: function(){ //去除自身的信息
+                let temp = []
+                for(let contact in this.userList){
+                    if(contact != this.userInfo.userID){                       
+                        temp.push(this.userList[contact])
+                    }
+                }
+                return temp;
+            }
+        },
         methods: {
             showProfile: function () {
-                alert(this.userInfo.nickname)
+                //alert(this.userInfo.nickname)
+                console.log(this.noSelfContact)
+                console.log(typeof this.userInfo.userID)
             },
             selectChat: function (chatContact) {
                 //alert(chatContact.nickname)

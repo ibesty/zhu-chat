@@ -51,7 +51,7 @@
         created: function () { //创建实例时检查是否已经登陆过，如果是的话直接从localStorage中获取nickname和userID
             this.userInfo.nickname = localStorage.getItem('nickname') || ''
             this.userInfo.userID = localStorage.getItem('userID') || this.rand()
-            this.userInfo.userID = this.rand()
+            //this.userInfo.userID = this.rand()
             if (this.userInfo.nickname !== '') {
                 this.modal_show = false
                 this.login()
@@ -60,6 +60,7 @@
         sockets: {
             connect: function () {
                 console.log('socket connected')
+                this.login()
             },
             login: function (data) {
                 let userInfo = data.userInfo

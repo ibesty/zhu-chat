@@ -22,7 +22,7 @@ io.on('connection', socket => {
     socket.on('login', userInfo => {
         userList[parseInt(userInfo.userID)] = userInfo
         userList[parseInt(userInfo.userID)].socketID = socket.id
-        console.log(userList[parseInt(userInfo.userID)])
+        //console.log(userList[parseInt(userInfo.userID)])
         console.log(userInfo.nickname + '已经登陆, ID是: ' + userList[parseInt(userInfo.userID)].userID)
         console.log('当前在线的用户： ')
         for (var item in userList) {
@@ -36,7 +36,7 @@ io.on('connection', socket => {
 
     socket.on('message', msgData => {
         console.log(msgData.sourceID + '对 ' + msgData.targetID + ' 说: ' + msgData.msgText)
-        console.log(userList[parseInt(msgData.targetID)].socketID)
+        //console.log(userList[parseInt(msgData.targetID)].socketID)
         msgData.msgType = 2
         io.sockets.sockets[userList[parseInt(msgData.targetID)].socketID].emit('message', msgData)
         //io.sockets[userList[parseInt(msgData.targetID)].socketID].emit('message', msgData)
