@@ -1,7 +1,9 @@
 # zhu-chat
 
-A chat program based Vue.js &amp; express
+模仿微信网页版写的聊天应用，基于Vue和socket.io
 > A chat program for zhuzhu
+
+[screenshot]((https://github.com/ibesty/zhu-chat/raw/master/screenshot/screenshot.png)
 
 ## Build Setup
 
