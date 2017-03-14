@@ -6,20 +6,19 @@
             <button slot="footer" @click="close(),login()">确定</button>
         </modal>
         <panel :userList="userList" :userInfo="userInfo" @currentContactChange="currentContactChange"></panel>
-        <chat-area :currentContact="currentContact" :messageList="this.currentMessageList"
-                   @sendConfirm="sendMessage"></chat-area>
+        <chat-area :currentContact="currentContact" :messageList="currentMessageList" :userInfo="userInfo" @sendConfirm="sendMessage"></chat-area>
     </div>
 </template>
-
 <script>
     import Modal from './components/Modal.vue'
     import Panel from './components/Panel.vue'
     import ChatArea from './components/ChatArea.vue'
+    import blockies from './assets/js/blockies.min.js'
 
     const avatar1 = require('./assets/img/avatar.jpg')
     const avatar2 = require('./assets/img/contact-avatar.jpg')
 
-    function MsgData (msgType, sourceID, targetID, msgText) {
+    function MsgData(msgType, sourceID, targetID, msgText) {
         this.msgType = msgType
         this.sourceID = sourceID
         this.targetID = targetID
@@ -38,21 +37,22 @@
                 userInfo: {
                     nickname: '',
                     userID: '',
-                    userAvatar: avatar1,
+                    userAvatar: '',
                     currentChat: false
                 },
                 userList: {},
                 messageList: {},
                 //currentMessageList: [],
-                currentContact: '',
+                currentContact: null,
                 modal_show: true
             }
         },
         created: function () { //创建实例时检查是否已经登陆过，如果是的话直接从localStorage中获取nickname和userID
             this.userInfo.nickname = localStorage.getItem('nickname') || ''
             this.userInfo.userID = localStorage.getItem('userID') || this.rand()
+            this.userInfo.userAvatar = localStorage.getItem('userAvatar') || this.createAvatar()
             //this.userInfo.userID = this.rand()
-            if (this.userInfo.nickname !== '') {
+            if (this.userInfo.nickname != '') {
                 this.modal_show = false
                 this.login()
             }
@@ -60,7 +60,7 @@
         sockets: {
             connect: function () {
                 console.log('socket connected')
-                this.login()
+                //this.login()
             },
             login: function (data) {
                 let userInfo = data.userInfo
@@ -93,40 +93,53 @@
             login: function () {
                 localStorage.setItem('userID', this.userInfo.userID)
                 localStorage.setItem('nickname', this.userInfo.nickname)
+                localStorage.setItem('userAvatar', this.userInfo.userAvatar)
                 this.$socket.emit('login', this.userInfo)
             },
             sendMessage: function (msgText) {
-//                this.msgData.sourceID = this.userInfo.userID
-//                this.msgData.targetID = this.currentContact.userID
-//                this.msgData.msgText = msgText
-                let TempMsgData = new MsgData(1,this.userInfo.userID,this.currentContact.userID,msgText)
+                //                this.msgData.sourceID = this.userInfo.userID
+                //                this.msgData.targetID = this.currentContact.userID
+                //                this.msgData.msgText = msgText
+                let TempMsgData = new MsgData(1, this.userInfo.userID, this.currentContact.userID, msgText)
                 console.log(TempMsgData)
                 this.currentMessageList.push(TempMsgData)
                 console.log(this.currentMessageList)
                 this.$socket.emit('message', TempMsgData)
-                console.log('消息已发送给 ' + TempMsgData.targetID + ' : ' + TempMsgData.msgText　+ ' ' + TempMsgData.msgType)
+                console.log('消息已发送给 ' + TempMsgData.targetID + ' : ' + TempMsgData.msgText　 + ' ' + TempMsgData.msgType)
             },
             currentContactChange: function (chatContact) {
                 this.currentContact = chatContact
                 //this.currentMessageList = this.messageList[parseInt(this.currentContact.userID)]
                 console.log(this.currentContact.userID)
                 console.log(this.currentMessageList)
+            },
+            createAvatar: function () {
+                let avatar = window.blockies.create({
+                    size: 10,
+                    scale: 4
+                })
+                let src = avatar.toDataURL("image/png")
+                //console.log(src)
+                return src
             }
         },
         computed: {
-            currentMessageList: function(){
-                if (typeof this.messageList[parseInt(this.currentContact.userID)] == 'undefined') {
-                    this.messageList[parseInt(this.currentContact.userID)] = new Array()
+            currentMessageList: function () {
+                if (this.currentContact == null) {
+                    return null
+                } else {
+                    if (typeof this.messageList[parseInt(this.currentContact.userID)] == 'undefined') {
+                        this.messageList[parseInt(this.currentContact.userID)] = new Array()
+                    }
+                    console.log(this.messageList[parseInt(this.currentContact.userID)])
+                    //let TempList = new Array()
+                    //TempList = this.messageList[parseInt(this.currentContact.userID)]
+                    return this.messageList[parseInt(this.currentContact.userID)]
                 }
-                console.log(this.messageList[parseInt(this.currentContact.userID)])
-                //let TempList = new Array()
-                //TempList = this.messageList[parseInt(this.currentContact.userID)]
-                return this.messageList[parseInt(this.currentContact.userID)]
             }
         }
     }
 </script>
-
 <style>
     #app {
         font-family: 'Avenir', Helvetica, Arial, sans-serif;
@@ -137,22 +150,22 @@
         margin-top: 60px;
         border: 1px solid rgba(100, 100, 100, 0.5);
     }
-
+    
     h1,
     h2 {
         font-weight: normal;
     }
-
+    
     ul {
         list-style-type: none;
         padding: 0;
     }
-
+    
     li {
         display: inline-block;
         margin: 0 10px;
     }
-
+    
     a {
         color: #42b983;
     }

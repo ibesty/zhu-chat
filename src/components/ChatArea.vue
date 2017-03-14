@@ -3,34 +3,35 @@
         <div class="chat_header">
             <div class="title_wrap">
                 <div class="title">
-                    <a v-if="currentContact !== ''" href="javascript:" class="title_name">{{currentContact.nickname}}</a>
+                    <a v-if="currentContact !== null" href="javascript:" class="title_name">{{currentContact.nickname}}</a>
                 </div>
             </div>
         </div>
         <div class="chat_body">
             <vue-nice-scrollbar classes="chat_content" theme="light" :speed=50 :needToBottom="true">
                 <div id="scroll_content" class="scroll_content">
-                    <div v-for="message in msgList" class="message_item">
-                        <div :class="{'system_msg' : message.msgType == 0,'self_msg': message.msgType == 1,'other_msg': message.msgType == 2}">
-                            <img v-if="message.msgType !== 0" :src="message.msgType === 1 ? headerImgSrc :currentContact.userAvatar" class="img">
-
+                    <transition-group name="msg-fade">
+                    <div v-for="message in msgList" :key="message" class="message_item">
+                        <div class="clearfix" :class="{'system_msg' : message.msgType == 0,'self_msg': message.msgType == 1,'other_msg': message.msgType == 2}">
+                            <img v-if="message.msgType !== 0" :src="message.msgType === 1 ? userInfo.userAvatar :currentContact.userAvatar" class="img">
                             <div class="msg_text">
                                 <span class="text_content">
                                     {{message.msgText}}
                                 </span>
                             </div>
                         </div>
-
                     </div>
+                    </transition-group>
                 </div>
             </vue-nice-scrollbar>
         </div>
-        <div v-if="currentContact !== ''" class="chat_footer">
+        <div v-if="currentContact != null" class="chat_footer">
             <div class="toolbar">
                 <!-- Temporarily left blank -->
             </div>
             <div class="input_content">
-                <pre id="edit_area" class="edit_area" contenteditable="true" @keyup="changeData($event)"  @keydown.enter.prevent @keyup.enter="sendConfirm" @keyup.ctrl.enter=""></pre>
+                <pre id="edit_area" class="edit_area" contenteditable="true" @keyup="changeData($event)" @keydown.enter.prevent @keyup.enter="sendConfirm"
+                    @keyup.ctrl.enter=""></pre>
             </div>
             <div class="action">
                 <a href="javascript:" @click="sendConfirm" class="btn btn_send">发送</a>
@@ -106,6 +107,7 @@
                     position: relative;
                     word-wrap: break-word;
                     word-break: break-all;
+                    text-align: left;
                     max-width: 300px;
                     min-height: 2.5em;
                     margin: 0 10px;
@@ -151,6 +153,13 @@
                 }
             }
         }
+
+                .msg-fade-enter-active, .msg-fade-leave-active {
+                    transition: opacity .5s;
+                }
+                .msg-fade-enter, msg-fade-leave-to {
+                    opacity: 0;
+                }
         // end chat body
         .chat_footer {
             position: absolute;
@@ -207,6 +216,14 @@
         }
     }
     
+    .clearfix:after {
+        content: ".";
+        display: block;
+        height: 0;
+        clear: both;
+        visibility: hidden;
+    }
+    
     // end chat area
 </style>
 <script>
@@ -216,12 +233,11 @@
         components: {
             vueNiceScrollbar
         },
-        props: ['currentContact', 'messageList'],
+        props: ['userInfo','currentContact', 'messageList'],
         data: function () {
             return {
                 inputContent: '',
-                msgList: [],
-                headerImgSrc: require('../assets/img/avatar.jpg')
+                msgList: []
             }
         },
         watch: {

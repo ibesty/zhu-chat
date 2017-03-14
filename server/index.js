@@ -1,12 +1,16 @@
 import Express from 'express'
 import Http from 'http'
 import Socket from 'socket.io'
+import fs from 'fs'
+import chatRobot from './module/chat-robot'
 
 const app = Express()
 const http = Http.Server(app)
 const io = Socket(http)
 
 var userList = {}
+
+app.use(Express.static('img'))
 app.get('/', (req, res) => {
     res.sendFile(__dirname + '/index.html')
 });
@@ -45,4 +49,5 @@ io.on('connection', socket => {
 
 http.listen(3000, () => {
     console.log('listening on *:3000')
+    chatRobot()
 })
