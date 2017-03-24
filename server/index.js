@@ -8,9 +8,12 @@ const app = Express()
 const http = Http.Server(app)
 const io = Socket(http)
 
+const port = 3999
+
 var userList = {}
 
 app.use(Express.static('img'))
+app.use('/dist', Express.static('dist'))
 app.get('/', (req, res) => {
     res.sendFile(__dirname + '/index.html')
 });
@@ -47,7 +50,7 @@ io.on('connection', socket => {
     })
 })
 
-http.listen(3000, () => {
-    console.log('listening on *:3000')
+http.listen(port, () => {
+    console.log('listening on *:'+ port)
     chatRobot()
 })

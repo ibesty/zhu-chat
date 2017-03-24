@@ -1,8 +1,9 @@
 import io from 'socket.io-client'
 import axios from 'axios'
 
-export default function chatRobot() {
-	const socket = io.connect('http://127.0.0.1:3000')
+export default function chatRobot(port) {
+	console.log(port)
+	const socket = io.connect('http://127.0.0.1:3999')
 	const api = 'http://www.tuling123.com/openapi/api'
 	const apiKey = '286e02fba8834e7a967d2d747c1cfbd6'
 
@@ -10,7 +11,7 @@ export default function chatRobot() {
 	const robotInfo = {
 		nickname: '美国队长',
 		userID: '10000',
-		userAvatar: 'http://192.168.1.2:3000/avatar.jpg',
+		userAvatar: 'http://192.168.1.2:3999/avatar.jpg',
 		currentChat: false
 	}
 

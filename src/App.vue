@@ -56,6 +56,15 @@
                 this.modal_show = false
                 this.login()
             }
+            console.log(window.Notification.toString())
+            if (window.Notification && Notification.permission !== "granted") {
+                console.log('aaaddd')
+                Notification.requestPermission(function (status) {
+                    if (Notification.permission !== status) {
+                        Notification.permission = status
+                    }
+                })
+            }
         },
         sockets: {
             connect: function () {
@@ -80,6 +89,12 @@
                 //this.messageList[parseInt(msgData.sourceID)] = new Array
                 this.messageList[parseInt(msgData.sourceID)].push(msgData)
                 console.log('收到了 ' + msgData.sourceID + ' 发来的消息: ' + msgData.msgText)
+                if (window.Notification && Notification.permission === 'granted' && document.visibilityState === 'hidden') {
+                    var n = new Notification(this.userList[parseInt(msgData.sourceID)].nickname,{icon: this.userList[parseInt(msgData.sourceID)].userAvatar,body: msgData.msgText});
+                    n.onshow = function () { 
+                    setTimeout(n.close.bind(n), 5000); 
+                    }
+                }//显示通知并自动关闭
                 console.log(this.messageList[parseInt(msgData.sourceID)])
             }
         },
@@ -140,33 +155,7 @@
         }
     }
 </script>
-<style>
-    #app {
-        font-family: 'Avenir', Helvetica, Arial, sans-serif;
-        -webkit-font-smoothing: antialiased;
-        -moz-osx-font-smoothing: grayscale;
-        text-align: center;
-        color: #2c3e50;
-        margin-top: 60px;
-        border: 1px solid rgba(100, 100, 100, 0.5);
-    }
+
+<style scoped>
     
-    h1,
-    h2 {
-        font-weight: normal;
-    }
-    
-    ul {
-        list-style-type: none;
-        padding: 0;
-    }
-    
-    li {
-        display: inline-block;
-        margin: 0 10px;
-    }
-    
-    a {
-        color: #42b983;
-    }
 </style>
